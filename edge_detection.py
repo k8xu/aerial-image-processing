@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 from skimage.morphology import binary_dilation
 
 
-def find_edge(img_path):
+def find_edge(img_path, plot=False):
     img = cv.imread(img_path)
     edges = cv.Canny(img,255/3,255)
     edge_dilate = binary_dilation(edges)
@@ -12,11 +12,14 @@ def find_edge(img_path):
     edge_dilate *= 255
     edge_image = cv.imwrite('gray_images/gray.png', edge_dilate)
     
-    plt.subplot(121),plt.imshow(img,cmap = 'gray')
-    plt.title('Original Image'), plt.xticks([]), plt.yticks([])
-    plt.subplot(122),plt.imshow(edge_dilate,cmap = 'gray')
-    plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
-    plt.show()
+    if plot:
+        plt.subplot(121),plt.imshow(img,cmap = 'gray')
+        plt.title('Original Image'), plt.xticks([]), plt.yticks([])
+        plt.subplot(122),plt.imshow(edge_dilate,cmap = 'gray')
+        plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
+        plt.show()
+
+    return edge_dilate
 
 def is_accessible(row, col, i, j, visited, binary_img):
     return 0 <= i and i < row and 0 <= j and j < col and not visited[i][j] and binary_img[i][j] == 0
@@ -69,14 +72,15 @@ def draw_islands(edge_img_path, islands):
             island_mask[point[0], point[1]] = 255
         island_mask = island_mask.astype(np.uint8)
     island_mask_img = cv.imwrite('island_images/islands.png',island_mask)
+    return island_mask
 
 
 
-img_path = "example_images/brighton_8_apple.png"
-find_edge(img_path)
+# img_path = "example_images/brighton_8_apple.png"
+# find_edge(img_path)
 #Edge image saved as gray_images/gray.png
 #Find the Islands!
-islands = findIslands("gray_images/gray.png")
+# islands = findIslands("gray_images/gray.png")
 
 #Draw the Islands (More of test function)
-draw_islands("gray_images/gray.png", islands)
+# draw_islands("gray_images/gray.png", islands)

@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from skimage.morphology import binary_opening, binary_erosion
 
 
-def find_green_pixels(image_path, save_mask_path):
+def find_green_pixels(image_path, save_mask_path=None, plot=False):
     image = cv2.imread(image_path)
     num_rows, num_cols, _ = image.shape
 
@@ -31,16 +31,20 @@ def find_green_pixels(image_path, save_mask_path):
     pixel_mask *= 255
 
     # Save green pixel mask
-    cv2.imwrite(save_mask_path, pixel_mask)
+    if save_mask_path is not None:
+        cv2.imwrite(save_mask_path, pixel_mask)
 
     # Overlay green pixel mask on original image
-    plt.figure()
-    plt.subplot(1, 2, 1)
-    plt.imshow(image, interpolation='none')
-    plt.subplot(1, 2, 2)
-    plt.imshow(image, interpolation='none')
-    plt.imshow(pixel_mask, cmap='Greens', interpolation='none', alpha=0.3)
-    plt.show()
+    if plot:
+        plt.figure()
+        plt.subplot(1, 2, 1)
+        plt.imshow(image, interpolation='none')
+        plt.subplot(1, 2, 2)
+        plt.imshow(image, interpolation='none')
+        plt.imshow(pixel_mask, cmap='Greens', interpolation='none', alpha=0.3)
+        plt.show()
+
+    return pixel_mask
 
 
 # Test the function
